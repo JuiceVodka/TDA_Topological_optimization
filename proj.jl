@@ -124,7 +124,7 @@ end
 
 function adjust_points(A, B) 
     a0, a1 = ripserer(A)
-    iterations = 10000
+    iterations = 1000
     tolerance = 0.01
     epsilon = 0.1
     for i in 1:iterations
@@ -192,6 +192,7 @@ function adjust_points(A, B)
 end    
 
 
+
 r = 1
 n = 100
 A = circular_pointcloud(n, r)
@@ -220,6 +221,13 @@ adjust_points(A, B)
 # end
 
 scatter!(B, label="B")
+
+# Display PDs
+# pd = bars(A)
+# plot(pd, label="A")
+# pd = bars(B)
+# plot!(pd, label="B")
+
 
 
 
