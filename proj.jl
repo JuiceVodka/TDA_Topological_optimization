@@ -23,12 +23,22 @@ function influence_death(bar, cloud, epsilon = 0.1, direction = 1)
 
     #to lengthen a bar, we need to move the faces of its death simplex further apart
     death_sx = death_simplex(bar)
+<<<<<<< HEAD
+=======
+    birth_simplex = PersistenceDiagrams.birth_simplex(bar)
+    #print(birth_simplex, " ", death_sx)
+>>>>>>> b70068d (experiments)
     if isnothing(death_sx)
         println("Bar is infinite")
         return
     end
 
     simplices = cloud[death_sx]
+<<<<<<< HEAD
+=======
+    birth_simplices = cloud[birth_simplex]
+    #println(simplices, " ", birth_simplices)
+>>>>>>> b70068d (experiments)
 
     #move the simplices apart from eachother
     for i in 1:length(simplices)
@@ -49,7 +59,17 @@ function influence_death(bar, cloud, epsilon = 0.1, direction = 1)
         #println(cloud[death_sx][i])
         #println(simplices[i])
         #println((simplices[i][1] + avg[1]*epsilon, simplices[i][2] + avg[2]*epsilon))
+<<<<<<< HEAD
        
+=======
+        #println(simplices[i], " ", birth_simplices[1], " ", birth_simplices[2])
+        #if length(birth_simplices) == 2 && simplices[i] ∈ birth_simplices
+        #    #println("FOUND")
+        #    continue
+        #end
+        #println(simplices[i], " ", birth_simplices[1], " ", birth_simplices[2])
+
+>>>>>>> b70068d (experiments)
         cloud[findall(x -> x == simplices[i], cloud)[1]] = (simplices[i][1] - avg[1]*epsilon*direction, simplices[i][2] - avg[2]*epsilon*direction)
         #println(cloud[death_sx][i])
         #println("................")
@@ -201,7 +221,11 @@ B = circle_bounded_pointcloud(n, r)
 scatter(A)
 scatter!(B)
 
+<<<<<<< HEAD
 adjust_points(A, B)
+=======
+#adjust_points(A, B)
+>>>>>>> b70068d (experiments)
 
 
 
@@ -220,7 +244,11 @@ adjust_points(A, B)
 #     end
 # end
 
+<<<<<<< HEAD
 scatter!(B, label="B")
+=======
+#scatter!(B, label="B")
+>>>>>>> b70068d (experiments)
 
 # Display PDs
 # pd = bars(A)
@@ -238,6 +266,7 @@ scatter!(B, label="B")
 # scatter!(B)
 
 
+<<<<<<< HEAD
 # cloud = random_cloud(10)
 # #println(cloud)
 # scatter(cloud)
@@ -246,6 +275,16 @@ scatter!(B, label="B")
 # #println(most_persistent)
 # #println("test0")
 # influence_death(most_persistent, cloud)
+=======
+cloud = random_cloud(10)
+# #println(cloud)
+# scatter(cloud)
+pd = bars(cloud)
+most_persistent = pd[2][end]
+# #println(most_persistent)
+# #println("test0")
+influence_death(most_persistent, cloud)
+>>>>>>> b70068d (experiments)
 
 # #println("TEST")
 # #println(cloud)

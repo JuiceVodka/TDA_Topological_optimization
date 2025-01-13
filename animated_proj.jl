@@ -105,6 +105,43 @@ function circular_pointcloud(n, r)
     return cloud
 end
 
+
+function double_circle_pointcloud(n, r)
+    cloud  = Tuple{Float64, Float64}[]
+    for i in 1:n
+        theta = 2*pi*rand()
+        left = rand() < 0.5
+        push!(cloud, (r*cos(theta) + 2*left, r*sin(theta)))
+        
+    end
+    return cloud
+end
+
+
+function square_point_cloud(n, r)
+    cloud = Tuple{Float64, Float64}[]
+    for i in 1:n
+        pos = rand()
+        if pos < 0.25
+            x = -r/2
+            y = -r/2 + 4*r*pos
+        elseif pos < 0.5
+            x = -r/2 + 4*r*(pos - 0.25)
+            y = r/2
+        elseif pos < 0.75
+            x = r/2
+            y = r/2 - 4*r*(pos - 0.5)
+        else
+            x = r/2 - 4*r*(pos - 0.75)
+            y = -r/2
+        end
+        push!(cloud, (x, y))
+        
+    end
+    return cloud
+end
+
+
 function circle_bounded_pointcloud(n, r)
     cloud  = Tuple{Float64, Float64}[]
     for i in 1:n
@@ -189,13 +226,16 @@ function adjust_points_with_animation(A, B, save_path = "adjustment.gif")
     a0, a1 = ripserer(A)
     iterations = 1000
     tolerance = 0.01
+
     epsilon = 0.1
+
 
     anim = @animate for i in 1:iterations
         b0, b1 = ripserer(B, threshold = 2)
 
         println("iteration $(i)")
         # decrease epsilon every 100 iterations
+
         if i % 100 == 0
             epsilon -= 0.01
         end
@@ -205,6 +245,10 @@ function adjust_points_with_animation(A, B, save_path = "adjustment.gif")
         match_bottle_1 = matching(Wasserstein(), a1, b1)
 
           for (p, q) in matching(match_bottle_0)
+
+            if (is_diagonal(p)) || (is_diagonal(q))
+                continue
+            end
 
             #compare births
             if q.birth < p.birth
@@ -224,6 +268,10 @@ function adjust_points_with_animation(A, B, save_path = "adjustment.gif")
 
         for (p, q) in matching(match_bottle_1)
 
+            if (is_diagonal(p)) || (is_diagonal(q))
+                continue
+            end
+
             #compare births
             if q.birth < p.birth
                 influence_birth(q, B, epsilon, 1)  #delay birth
@@ -235,12 +283,15 @@ function adjust_points_with_animation(A, B, save_path = "adjustment.gif")
             if q.death < p.death
                 influence_death(q, B, epsilon, 1)  #prolong death
             elseif q.death > p.death
+
                 influence_death(q, B, epsilon, -1)  #shorten death
             end
         end
 
         # match_bottle_0 = matching(Bottleneck(), a0, b0)
+
         loss = weight(match_bottle_0) + weight(match_bottle_1)
+
         # println("Current loss: $loss")
     
         # Stop if loss is below tolerance
@@ -272,6 +323,8 @@ end
 r = 1
 n = 100
 A = circular_pointcloud(n, r)
+#A = double_circle_pointcloud(n, r)
+#A = square_point_cloud(n, r)
 B = circle_bounded_pointcloud(n, r)
 
 # scatter(A)
